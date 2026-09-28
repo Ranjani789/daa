@@ -1,0 +1,46 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+int main() {
+    int n, e, s;
+    cout << "Enter number of vertices: ";
+    cin >> n;
+    cout << "Enter number of edges: ";
+    cin >> e;
+    vector<pair<int, int> > g[10];
+    cout << "Enter edges (u v w):\n";
+    while (e--) {
+        int u, v, w;
+        cin >> u >> v >> w;
+        g[u - 1].push_back(make_pair(v - 1, w));
+    }
+    cout << "Enter source: ";
+    cin >> s;
+    s--;
+    int d[10], vis[10] = {0};
+    for (int i = 0; i < n; i++)
+        d[i] = 9999;
+    d[s] = 0;
+    for (int k = 0; k < n - 1; k++) {
+        int u = -1;
+        for (int i = 0; i < n; i++) {
+            if (!vis[i] && (u == -1 || d[i] < d[u]))
+                u = i;
+        }
+        if (u == -1)
+            break;
+        vis[u] = 1;
+        for (vector<pair<int, int> >::iterator it = g[u].begin();
+             it != g[u].end(); ++it) {
+            int v = it->first;
+            int w = it->second;
+            if (d[u] + w < d[v])
+                d[v] = d[u] + w;
+        }    }
+    cout << "\nShortest Distances:\n";
+    for (int i = 0; i < n; i++) {
+        cout << s + 1 << " -> " << i + 1
+             << " = " << d[i] << endl;
+    }
+    return 0;
+}
